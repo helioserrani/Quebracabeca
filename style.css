@@ -28,7 +28,7 @@
   --abas: rgba(123, 47, 247, .12);
   --tema-fundo: rgba(255, 255, 255, .7);
   --veu: radial-gradient(ellipse at center, rgba(255, 255, 255, .1), rgba(255, 255, 255, .35));
-  --imagem-fundo: radial-gradient(ellipse at top, #fde9ff, #f6efff 60%);
+  --imagem-fundo: url("assets/fundo-1-claro.jpg");
   --modal: rgba(246, 239, 255, .85);
 }
 
