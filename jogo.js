@@ -146,8 +146,11 @@ function desenhar() {
       const x = n > 1 ? ((peca % n) / (n - 1)) * 100 : 0;
       const y = n > 1 ? (Math.floor(peca / n) / (n - 1)) * 100 : 0;
       botao.style.backgroundPosition = `${x}% ${y}%`;
+      botao.dataset.pos = pos;
       botao.setAttribute("aria-label", `Peça ${peca + 1}`);
-      botao.addEventListener("click", () => tocarPeca(pos));
+      botao.addEventListener("click", () => {
+        if (!arrasto.ignorarClique) tocarPeca(pos);
+      });
       return botao;
     })
   );
@@ -161,14 +164,73 @@ function tocarPeca(pos) {
   } else if (estado.selecionada === pos) {
     estado.selecionada = null;
   } else {
-    const a = estado.selecionada;
-    [estado.ordem[a], estado.ordem[pos]] = [estado.ordem[pos], estado.ordem[a]];
-    estado.selecionada = null;
-    estado.jogadas++;
+    trocar(estado.selecionada, pos);
+    return;
   }
+  desenhar();
+}
+
+function trocar(a, b) {
+  [estado.ordem[a], estado.ordem[b]] = [estado.ordem[b], estado.ordem[a]];
+  estado.selecionada = null;
+  estado.jogadas++;
   desenhar();
   if (estado.ordem.every((p, i) => p === i)) vencer();
 }
+
+// Arrastar: segure uma peça e solte em cima de outra para trocá-las (dedo ou mouse)
+const arrasto = { pos: null, id: null, x: 0, y: 0, origem: null, fantasma: null, alvo: null, ignorarClique: false };
+
+$("tabuleiro").addEventListener("pointerdown", (e) => {
+  const peca = e.target.closest(".peca");
+  if (!peca || e.button > 0) return;
+  const pos = Number(peca.dataset.pos);
+  if (estado.ordem[pos] === pos) return; // peça já no lugar
+  Object.assign(arrasto, { pos, id: e.pointerId, x: e.clientX, y: e.clientY, origem: peca });
+});
+
+window.addEventListener("pointermove", (e) => {
+  if (arrasto.pos === null || e.pointerId !== arrasto.id) return;
+  if (!arrasto.fantasma) {
+    // Só vira arrasto depois de mover um pouco; um toque parado continua sendo clique
+    if (Math.hypot(e.clientX - arrasto.x, e.clientY - arrasto.y) < 8) return;
+    const caixa = arrasto.origem.getBoundingClientRect();
+    const fantasma = arrasto.origem.cloneNode(false);
+    fantasma.className = "peca fantasma";
+    fantasma.style.width = `${caixa.width}px`;
+    fantasma.style.height = `${caixa.height}px`;
+    document.body.append(fantasma);
+    arrasto.fantasma = fantasma;
+    arrasto.origem.classList.add("arrastando");
+    estado.selecionada = null;
+    document.querySelectorAll(".peca.selecionada").forEach((p) => p.classList.remove("selecionada"));
+  }
+  const { fantasma } = arrasto;
+  fantasma.style.left = `${e.clientX - fantasma.offsetWidth / 2}px`;
+  fantasma.style.top = `${e.clientY - fantasma.offsetHeight / 2}px`;
+  const alvo = document.elementFromPoint(e.clientX, e.clientY)?.closest("#tabuleiro .peca") || null;
+  if (alvo !== arrasto.alvo) {
+    arrasto.alvo?.classList.remove("alvo");
+    if (alvo && alvo !== arrasto.origem) alvo.classList.add("alvo");
+    arrasto.alvo = alvo;
+  }
+});
+
+function soltar(e) {
+  if (arrasto.pos === null || e.pointerId !== arrasto.id) return;
+  const { pos, fantasma, alvo } = arrasto;
+  Object.assign(arrasto, { pos: null, id: null, origem: null, fantasma: null, alvo: null });
+  if (!fantasma) return; // foi só um toque: o clique cuida
+  fantasma.remove();
+  // O navegador ainda dispara um clique ao soltar; ignora esse
+  arrasto.ignorarClique = true;
+  setTimeout(() => (arrasto.ignorarClique = false));
+  const destino = alvo ? Number(alvo.dataset.pos) : pos;
+  if (e.type === "pointerup" && destino !== pos) trocar(pos, destino);
+  else desenhar();
+}
+window.addEventListener("pointerup", soltar);
+window.addEventListener("pointercancel", soltar);
 
 function vencer() {
   clearInterval(estado.cronometro);
