@@ -129,7 +129,7 @@ body::before {
 }
 .botao:hover { transform: translateY(-2px); }
 .botao-secundario {
-  color: var(--texto);
+  color: #fff;
   background: linear-gradient(180deg, var(--roxo), #4b149e);
   box-shadow: 0 4px 16px rgba(123, 47, 247, .35);
 }
