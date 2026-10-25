@@ -59,6 +59,12 @@ function mostrarTema(tema) {
     galeria.innerHTML = '<p class="aviso">Imagens deste tema em breve ✨</p>';
     return;
   }
+  if (tema.imagens.length === 1) {
+    // Só uma imagem: a prévia já mostra, não precisa de galeria
+    galeria.replaceChildren();
+    escolherFoto(tema.imagens[0]);
+    return;
+  }
   galeria.replaceChildren(
     ...tema.imagens.map((url) => {
       const mini = document.createElement("button");
