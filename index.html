@@ -13,8 +13,15 @@
   <meta property="og:description" content="Transforme qualquer foto em um quebra-cabeça mágico.">
   <meta property="og:image" content="assets/logo-foto-encantada.png">
   <link rel="stylesheet" href="style.css">
+  <script>
+    // Aplica o tema salvo antes de desenhar a página, para não piscar
+    try {
+      if (localStorage.getItem("tema") === "claro") document.documentElement.dataset.tema = "claro";
+    } catch (e) {}
+  </script>
 </head>
 <body>
+  <button id="botao-tema" class="botao-tema" aria-label="Alternar tema claro/escuro">☀️</button>
   <!-- Tela inicial -->
   <section id="tela-inicio" class="tela ativa">
     <img class="logo logo-grande" src="assets/logo-foto-encantada.png" alt="Foto Encantada">

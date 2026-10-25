@@ -196,3 +196,19 @@ dica.addEventListener("pointerdown", () => mostrarFoto(true));
 ["pointerup", "pointerleave", "pointercancel"].forEach((ev) =>
   dica.addEventListener(ev, () => mostrarFoto(false))
 );
+
+// Alterna entre a versão clara e a escura
+const botaoTema = $("botao-tema");
+function atualizarBotaoTema() {
+  const claro = document.documentElement.dataset.tema === "claro";
+  botaoTema.textContent = claro ? "🌙" : "☀️";
+  botaoTema.setAttribute("aria-label", claro ? "Usar tema escuro" : "Usar tema claro");
+}
+botaoTema.addEventListener("click", () => {
+  const claro = document.documentElement.dataset.tema !== "claro";
+  if (claro) document.documentElement.dataset.tema = "claro";
+  else delete document.documentElement.dataset.tema;
+  try { localStorage.setItem("tema", claro ? "claro" : "escuro"); } catch (e) {}
+  atualizarBotaoTema();
+});
+atualizarBotaoTema();
