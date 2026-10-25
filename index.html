@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Foto Encantada · Quebra-Cabeça</title>
+  <meta name="description" content="Transforme qualquer foto em um quebra-cabeça mágico.">
+  <meta name="theme-color" content="#1e0c3a">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <meta property="og:title" content="Foto Encantada">
+  <meta property="og:description" content="Transforme qualquer foto em um quebra-cabeça mágico.">
+  <meta property="og:image" content="assets/logo-foto-encantada.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Tela inicial -->
+  <section id="tela-inicio" class="tela ativa">
+    <img class="logo logo-grande" src="assets/logo-foto-encantada.png" alt="Foto Encantada">
+    <p class="subtitulo">Transforme qualquer foto em um quebra-cabeça mágico.</p>
+
+    <div class="cartao">
+      <label class="botao botao-secundario" for="entrada-foto">📷 Escolher minha foto</label>
+      <input id="entrada-foto" type="file" accept="image/*" hidden>
+      <img id="previa-foto" class="previa" src="assets/foto-exemplo.jpg" alt="Foto escolhida">
+
+      <fieldset class="dificuldade">
+        <legend>Dificuldade</legend>
+        <label><input type="radio" name="tamanho" value="3" checked> Fácil 3×3</label>
+        <label><input type="radio" name="tamanho" value="4"> Médio 4×4</label>
+        <label><input type="radio" name="tamanho" value="5"> Difícil 5×5</label>
+      </fieldset>
+
+      <button id="botao-jogar" class="botao">✨ Jogar</button>
+    </div>
+  </section>
+
+  <!-- Tela do jogo -->
+  <section id="tela-jogo" class="tela">
+    <header class="cabecalho">
+      <img class="logo logo-pequeno" src="assets/logo-foto-encantada.png" alt="Foto Encantada">
+      <div class="placar">
+        <span>⏱ <strong id="tempo">0:00</strong></span>
+        <span>🔀 <strong id="jogadas">0</strong> jogadas</span>
+      </div>
+    </header>
+
+    <div id="tabuleiro" class="tabuleiro" aria-label="Tabuleiro do quebra-cabeça"></div>
+
+    <div class="acoes">
+      <button id="botao-dica" class="botao botao-secundario">👁 Ver foto</button>
+      <button id="botao-embaralhar" class="botao botao-secundario">🔀 Recomeçar</button>
+      <button id="botao-voltar" class="botao botao-secundario">🏠 Início</button>
+    </div>
+  </section>
+
+  <!-- Vitória -->
+  <div id="vitoria" class="modal" hidden>
+    <div class="cartao">
+      <img class="logo" src="assets/logo-foto-encantada.png" alt="Foto Encantada">
+      <h2>Encantado! 🎉</h2>
+      <p id="resumo-vitoria"></p>
+      <button id="botao-de-novo" class="botao">✨ Jogar de novo</button>
+      <button id="botao-trocar-foto" class="botao botao-secundario">📷 Trocar foto</button>
+    </div>
+  </div>
+
+  <script src="jogo.js"></script>
+</body>
+</html>
