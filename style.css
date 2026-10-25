@@ -72,11 +72,22 @@ body::before {
 /* Tela inicial: ilustração de mãe e filho como fundo, conteúdo em coluna por cima */
 :root { --veu-inicio: linear-gradient(90deg, rgba(18, 7, 31, .15) 30%, rgba(18, 7, 31, .7)); }
 :root[data-tema="claro"] { --veu-inicio: linear-gradient(90deg, rgba(246, 239, 255, .05) 30%, rgba(246, 239, 255, .75)); }
-body.na-inicio::before {
-  background:
-    var(--veu-inicio),
-    url("assets/destaque.jpg") var(--foco-destaque, 45%) center / cover no-repeat,
-    var(--fundo);
+/* Celular e tablet: a ilustração vem em destaque no topo e as informações ficam embaixo */
+.destaque-topo {
+  display: block; width: calc(100% + 32px); max-width: none;
+  margin: -24px -16px -56px;
+  aspect-ratio: 16 / 9; max-height: 60vh; object-fit: cover;
+  -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent);
+  mask-image: linear-gradient(180deg, #000 70%, transparent);
+}
+@media (min-width: 1000px) {
+  .destaque-topo { display: none; }
+  body.na-inicio::before {
+    background:
+      var(--veu-inicio),
+      url("assets/destaque.jpg") var(--foco-destaque, 45%) center / cover no-repeat,
+      var(--fundo);
+  }
 }
 .coluna-inicio {
   display: flex; flex-direction: column; align-items: center; gap: 20px;
@@ -233,4 +244,6 @@ body.na-inicio::before {
 /* No celular, abre espaço para o botão de tema não cobrir o logo */
 @media (max-width: 700px) {
   .tela { padding-top: 64px; }
+  /* A tela inicial começa pela ilustração, que já fica atrás do botão de tema */
+  #tela-inicio { padding-top: 24px; }
 }
