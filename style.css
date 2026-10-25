@@ -17,11 +17,17 @@ body {
   min-height: 100vh;
   font-family: "Trebuchet MS", system-ui, sans-serif;
   color: var(--texto);
+  background: var(--fundo);
+}
+
+/* Fundo ilustrado fixo (camada própria para funcionar também no iPhone) */
+body::before {
+  content: "";
+  position: fixed; inset: 0; z-index: -1;
   background:
-    radial-gradient(ellipse at top, var(--fundo-2), transparent 60%),
-    radial-gradient(circle at 80% 90%, #3b0f5c, transparent 50%),
+    radial-gradient(ellipse at center, rgba(18, 7, 31, .15), rgba(18, 7, 31, .55)),
+    url("assets/fundo-1.jpg") center / cover no-repeat,
     var(--fundo);
-  background-attachment: fixed;
 }
 
 .tela { display: none; min-height: 100vh; padding: 24px 16px; }
