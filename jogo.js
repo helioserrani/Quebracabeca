@@ -207,8 +207,7 @@ dica.addEventListener("pointerdown", () => mostrarFoto(true));
 const botaoTema = $("botao-tema");
 function atualizarBotaoTema() {
   const claro = document.documentElement.dataset.tema === "claro";
-  botaoTema.textContent = claro ? "🌙" : "☀️";
-  botaoTema.setAttribute("aria-label", claro ? "Usar tema escuro" : "Usar tema claro");
+  botaoTema.textContent = claro ? "ESCURO 🌙" : "CLARO ☀️";
 }
 botaoTema.addEventListener("click", () => {
   const claro = document.documentElement.dataset.tema !== "claro";

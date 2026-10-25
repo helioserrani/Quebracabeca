@@ -14,14 +14,15 @@
   <meta property="og:image" content="assets/logo-foto-encantada.png">
   <link rel="stylesheet" href="style.css">
   <script>
-    // Aplica o tema salvo antes de desenhar a página, para não piscar
+    // Começa no tema claro; usa o escuro só se a pessoa escolheu. Roda antes de desenhar, para não piscar
+    document.documentElement.dataset.tema = "claro";
     try {
-      if (localStorage.getItem("tema") === "claro") document.documentElement.dataset.tema = "claro";
+      if (localStorage.getItem("tema") === "escuro") delete document.documentElement.dataset.tema;
     } catch (e) {}
   </script>
 </head>
 <body>
-  <button id="botao-tema" class="botao-tema" aria-label="Alternar tema claro/escuro">☀️</button>
+  <button id="botao-tema" class="botao-tema">ESCURO 🌙</button>
   <!-- Tela inicial -->
   <section id="tela-inicio" class="tela ativa">
     <img class="logo logo-grande" src="assets/logo-foto-encantada.png" alt="Foto Encantada">
