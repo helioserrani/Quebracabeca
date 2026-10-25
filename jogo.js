@@ -5,7 +5,7 @@ const $ = (id) => document.getElementById(id);
 
 const estado = {
   foto: "assets/foto-exemplo.jpg",
-  n: 3,
+  n: 6,
   ordem: [],        // ordem[posição] = número da peça
   selecionada: null,
   jogadas: 0,
@@ -27,13 +27,63 @@ function carregarFoto(arquivo) {
         (img.width - lado) / 2, (img.height - lado) / 2, lado, lado,
         0, 0, tela.width, tela.height
       );
-      estado.foto = tela.toDataURL("image/jpeg", 0.9);
-      $("previa-foto").src = estado.foto;
+      escolherFoto(tela.toDataURL("image/jpeg", 0.9));
     };
     img.src = leitor.result;
   };
   leitor.readAsDataURL(arquivo);
 }
+
+function escolherFoto(url) {
+  estado.foto = url;
+  $("previa-foto").src = url;
+  document.querySelectorAll(".miniatura").forEach((m) => m.classList.toggle("ativa", m.dataset.url === url));
+}
+
+// Abas "Temas" / "Minha foto"
+document.querySelectorAll(".aba").forEach((aba) =>
+  aba.addEventListener("click", () => {
+    document.querySelectorAll(".aba").forEach((a) => {
+      const ativa = a === aba;
+      a.classList.toggle("ativa", ativa);
+      a.setAttribute("aria-selected", ativa);
+      $(a.dataset.aba).hidden = !ativa;
+    });
+  })
+);
+
+function mostrarTema(tema) {
+  document.querySelectorAll(".tema").forEach((b) => b.classList.toggle("ativo", b.dataset.id === tema.id));
+  const galeria = $("galeria-tema");
+  if (!tema.imagens.length) {
+    galeria.innerHTML = '<p class="aviso">Imagens deste tema em breve ✨</p>';
+    return;
+  }
+  galeria.replaceChildren(
+    ...tema.imagens.map((url) => {
+      const mini = document.createElement("button");
+      mini.className = "miniatura";
+      mini.dataset.url = url;
+      mini.style.backgroundImage = `url("${url}")`;
+      mini.setAttribute("aria-label", `${tema.nome}: imagem`);
+      mini.addEventListener("click", () => escolherFoto(url));
+      return mini;
+    })
+  );
+  escolherFoto(tema.imagens[0]);
+}
+
+$("lista-temas").replaceChildren(
+  ...TEMAS.map((tema) => {
+    const botao = document.createElement("button");
+    botao.className = "tema";
+    botao.dataset.id = tema.id;
+    botao.textContent = `${tema.emoji} ${tema.nome}`;
+    botao.addEventListener("click", () => mostrarTema(tema));
+    return botao;
+  })
+);
+mostrarTema(TEMAS.find((t) => t.imagens.length) || TEMAS[0]);
 
 function embaralhar(lista) {
   do {
@@ -76,6 +126,7 @@ function desenhar() {
   const { n, ordem, foto } = estado;
   const tabuleiro = $("tabuleiro");
   tabuleiro.style.setProperty("--n", n);
+  tabuleiro.style.setProperty("--espaco", n > 6 ? "1px" : "2px");
   tabuleiro.style.setProperty("--foto", `url("${foto}")`);
   tabuleiro.replaceChildren(
     ...ordem.map((peca, pos) => {
@@ -145,3 +196,19 @@ dica.addEventListener("pointerdown", () => mostrarFoto(true));
 ["pointerup", "pointerleave", "pointercancel"].forEach((ev) =>
   dica.addEventListener(ev, () => mostrarFoto(false))
 );
+
+// Alterna entre a versão clara e a escura
+const botaoTema = $("botao-tema");
+function atualizarBotaoTema() {
+  const claro = document.documentElement.dataset.tema === "claro";
+  botaoTema.textContent = claro ? "🌙" : "☀️";
+  botaoTema.setAttribute("aria-label", claro ? "Usar tema escuro" : "Usar tema claro");
+}
+botaoTema.addEventListener("click", () => {
+  const claro = document.documentElement.dataset.tema !== "claro";
+  if (claro) document.documentElement.dataset.tema = "claro";
+  else delete document.documentElement.dataset.tema;
+  try { localStorage.setItem("tema", claro ? "claro" : "escuro"); } catch (e) {}
+  atualizarBotaoTema();
+});
+atualizarBotaoTema();

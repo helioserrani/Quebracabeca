@@ -13,23 +13,44 @@
   <meta property="og:description" content="Transforme qualquer foto em um quebra-cabeça mágico.">
   <meta property="og:image" content="assets/logo-foto-encantada.png">
   <link rel="stylesheet" href="style.css">
+  <script>
+    // Aplica o tema salvo antes de desenhar a página, para não piscar
+    try {
+      if (localStorage.getItem("tema") === "claro") document.documentElement.dataset.tema = "claro";
+    } catch (e) {}
+  </script>
 </head>
 <body>
+  <button id="botao-tema" class="botao-tema" aria-label="Alternar tema claro/escuro">☀️</button>
   <!-- Tela inicial -->
   <section id="tela-inicio" class="tela ativa">
     <img class="logo logo-grande" src="assets/logo-foto-encantada.png" alt="Foto Encantada">
     <p class="subtitulo">Transforme qualquer foto em um quebra-cabeça mágico.</p>
 
     <div class="cartao">
-      <label class="botao botao-secundario" for="entrada-foto">📷 Escolher minha foto</label>
-      <input id="entrada-foto" type="file" accept="image/*" hidden>
+      <div class="abas" role="tablist">
+        <button class="aba ativa" role="tab" data-aba="aba-temas" aria-selected="true">🎨 Temas</button>
+        <button class="aba" role="tab" data-aba="aba-minha-foto" aria-selected="false">📷 Minha foto</button>
+      </div>
+
+      <div id="aba-temas" class="painel-aba">
+        <div id="lista-temas" class="lista-temas"></div>
+        <div id="galeria-tema" class="galeria"></div>
+      </div>
+
+      <div id="aba-minha-foto" class="painel-aba" hidden>
+        <label class="botao botao-secundario" for="entrada-foto">📷 Escolher minha foto</label>
+        <input id="entrada-foto" type="file" accept="image/*" hidden>
+      </div>
+
       <img id="previa-foto" class="previa" src="assets/foto-exemplo.jpg" alt="Foto escolhida">
 
       <fieldset class="dificuldade">
-        <legend>Dificuldade</legend>
-        <label><input type="radio" name="tamanho" value="3" checked> Fácil 3×3</label>
-        <label><input type="radio" name="tamanho" value="4"> Médio 4×4</label>
-        <label><input type="radio" name="tamanho" value="5"> Difícil 5×5</label>
+        <legend>Quantidade de peças</legend>
+        <label><input type="radio" name="tamanho" value="4"> Fácil · 16</label>
+        <label><input type="radio" name="tamanho" value="6" checked> Médio · 36</label>
+        <label><input type="radio" name="tamanho" value="8"> Difícil · 64</label>
+        <label><input type="radio" name="tamanho" value="10"> Mestre · 100</label>
       </fieldset>
 
       <button id="botao-jogar" class="botao">✨ Jogar</button>
@@ -66,6 +87,7 @@
     </div>
   </div>
 
+  <script src="temas.js"></script>
   <script src="jogo.js"></script>
 </body>
 </html>
