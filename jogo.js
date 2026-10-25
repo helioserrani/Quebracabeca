@@ -103,6 +103,7 @@ function embaralhar(lista) {
 
 function mostrarTela(id) {
   document.querySelectorAll(".tela").forEach((t) => t.classList.toggle("ativa", t.id === id));
+  document.body.classList.toggle("na-inicio", id === "tela-inicio");
 }
 
 function iniciar() {
